@@ -289,27 +289,176 @@ module.exports = (env) => {
 use istanbul to deal with unit test sourcemap ?!
 
 
+# Day 2
+
+Top 3 web page load time causes
+
+* Amount of javascript for initial download (Most important)
+* Amount of css fo initial download
+* Amount fo network requests on initial download
+
+Stats:
+Average website takes 19 s to load
+only 44% of the code is actually used 
+
+Google the need for mobile speed: **view the pdf**
+https://storage.googleapis.com/doubleclick-prod/documents/The_Need_for_Mobile_Speed_-_FINAL.pdf
+
+53% of visitors abandoned if a mobile site takes more than 3 seconds
+
+The most expensive process for browser engine is the css engine (formatter)
+
+Check out windows blog css formatter
+https://blogs.windows.com/msedgedev/2017/04/19/modernizing-dom-tree-microsoft-edge/
+
+
+**<=200kb (uncompressed) initial javascript [total]**
+
+**<=100kb (uncompressed) initia css [total]**
+ 
+**HTTP: <= 6 initial network calls**
+
+**HTTP2: <= 20 initial network calls**
+
+**90% code coverage (only 10% code unused)**
+
+
+Coverage profiling Linked in
+They ship 12.6 MB of scripts but not using 10.1 MB
+
+do the same thing for mutualofomaha.com
+
+742 KB and 334 KB are not used
+
+To enable coverage in the search Ctrl P then type > coverage and hit show 
+
+## Code splitting
+
+https://webpack.github.org/
+
+
+GWT pioneered code splitting
+
+
+GWT.runAync(new RunAsyncCallback() {
+})
+
+
+Process of splitting pieces of your code into async chunks **[at build time]**
+
+### How does it work?
+
+### why should I care?
+
+The average of web is mobile
+
+
+
+Two types of code splitting
+
+* Static 
+ ** when do you use it? 
+    *** "Heavy" Javascript, 
+    *** anything temporal anything that's not visible until user scrolls 
+    
+``` javascript    
+    import Listenr from './listene.js';
+    
+    //has to be dynamic import syntax from webpack, it's caled a dynamic import but it's static code splitting
+    const getModal = () => import ('./src/modal.js'); //always returns  promise
+    
+    Listener.on('didSomethingToWrannetModalBeingLoaded', () => {
+            //async fetching modal code from a separate chunk
+            getModel().then((module) => {
+                const modalTarget = document.getElementById('Modal');
+                module.initModal(modalTarget);
+            });
+    });
+```    
+
+Don't use Split-chunks-plugin! it's built into webpack 4.
+
+* Dynamic
+``` javascript
+
+const getTheme = (themeName) => import(`./src/theme/${themeName}`);
+
+```    
+if it's a partial path and some expression : Hey webpack! find me all modules in this partial path
+
+When is it good for:
+
+* A/B testing
+* Theming
+
+Context Module!! ^^
+
+
+https://www.udacity.com/course/offline-web-applications--ud899
+
+
+
+You shouldn't code split within your libraries (such as jssdk). Only do it in the app/components
+
+
+Vue has dynamic loading built in, you can lazy load any component
+and the framework will handle the lazy fetching when the component is needed
+
+
+
+Perf scenario 
+
+HTTP/2
+
+https://medium.com/webpack/webpack-http-2-7083ec3f3ce6
+
+AggressiveSplittingPlugin
+Offline plugin: const OfflinePlugin = require('offline-plugin');
+
+
+
+WorkBox is a warpper for ServiceWorkers that simplifies the interface
+
+
+
+How do you enforce file size :
+
+use performance:
+
+```
+    performance: {
+        hints: 'error',
+        maxEntrypointSize: 10,
+        assetFilter: (fileName) => fileName.endsWith('.js') || fileName.endsWith('.css') || fileName.endsWith('.png')
+    }
+```
+
+
+ Let's play bundle analyzer
+ 
+ 
+https://medium.com/webpack/webpack-bits-getting-the-most-out-of-the-commonschunkplugin-ab389e5f318
+
+
+#Plugins
+
+What is tapable?
+
+~ 200 line plugin library
 
  
+Tapable instance
 
-
-
-
-
-
-        
-
-
-
-
-
-
+* Compiler is the top level tapable instance
+* Resolver
+* Module Factories
+* Parser
+* Template data binding for your modules
 
 
  
-
- 
-
+ Go to Youtube and search for "everything is a plugin" 
+ https://github.com/thelarkinn/everything-is-a-plugin
 
 
 
